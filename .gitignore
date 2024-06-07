@@ -1,2 +1,8 @@
 /StyleGuide/StyleTTS2/*
 env
+*.wav
+*.json
+*.txt
+*.srt
+*.tsv
+*.vtt

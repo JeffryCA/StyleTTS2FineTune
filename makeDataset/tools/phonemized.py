@@ -1,7 +1,9 @@
 import argparse
-from phonemizer import phonemize
 import os
+
+from phonemizer import phonemize
 from tqdm import tqdm
+
 # from phonemizer.backend.espeak.wrapper import EspeakWrapper                ## For Windows
 # EspeakWrapper.set_library("C:\Program Files\eSpeak NG\libespeak-ng.dll")  ## For Windows
 
@@ -35,7 +37,7 @@ for (
     speakers.append(speaker)
 
 # Phonemize all text in one go to avoid triggering  mem error
-phonemized = phonemize(
+en_phonemized = phonemize(
     transcriptions,
     language=args.language,
     backend="espeak",
@@ -43,13 +45,22 @@ phonemized = phonemize(
     with_stress=True,
 )
 
+# de_phonemized = phonemize(
+#     transcriptions,
+#     language="de",
+#     backend="espeak",
+#     preserve_punctuation=True,
+#     with_stress=True,
+# )
+
 for i in tqdm(range(len(filenames))):
+    # phonemized = de_phonemized[i] if "Niklas" in filenames[i] else en_phonemized[i]
     phonemized_lines.append(
-        (filenames[i], f"{filenames[i]}|{phonemized[i]}|{speakers[i]}\n")
+        (filenames[i], f"{filenames[i]}|{en_phonemized[i]}|{speakers[i]}\n")
     )
 
 
-phonemized_lines.sort(key=lambda x: int(x[0].split("_")[1].split(".")[0]))
+phonemized_lines.sort(key=lambda x: int(x[0].split("_")[-1].split(".")[0]))
 
 # Split training/validation set
 train_lines = phonemized_lines[: int(len(phonemized_lines) * 0.9)]
